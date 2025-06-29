@@ -15,8 +15,6 @@ class User
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
@@ -36,6 +34,9 @@ class User
     #[ORM\OneToMany(targetEntity: Purchase::class, mappedBy: 'user')]
     private Collection $purchases;
 
+    #[ORM\OneToOne(mappedBy: 'userId', cascade: ['persist', 'remove'])]
+    private ?UserDetails $userDetails = null;
+
     public function __construct()
     {
         $this->purchases = new ArrayCollection();
@@ -44,18 +45,6 @@ class User
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -132,6 +121,23 @@ class User
                 $purchase->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserDetails(): ?UserDetails
+    {
+        return $this->userDetails;
+    }
+
+    public function setUserDetails(UserDetails $userDetails): static
+    {
+        // set the owning side of the relation if necessary
+        if ($userDetails->getUserId() !== $this) {
+            $userDetails->setUserId($this);
+        }
+
+        $this->userDetails = $userDetails;
 
         return $this;
     }

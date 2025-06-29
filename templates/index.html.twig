@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User List{% endblock %}
+
+{% block body %}
+{% h1 class="mb-4" %} User List {% endblock %}
+
+<table class = "table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in pagination %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3" class="text-center">No users found!</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="d-flex justify-content-center">
+    {{ knp_pagination_render(pagination) }}
+</div>
+{% endblock %}

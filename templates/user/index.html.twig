@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body{
+            background-color: #f8f9fa !important;
+        }
+        .user-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px 25px;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Table full width, clean borders */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+            color: #343a40;
+        }
+
+        /* Table header */
+        thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 600;
+        }
+
+        /* Table cells */
+        tbody td {
+            border: 1px solid #dee2e6;
+            padding: 12px 15px;
+        }
+
+        /* Zebra striping for rows */
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Hover effect for rows */
+        tbody tr:hover {
+            background-color: #e9f5ff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Center "No users found" text */
+        tbody .no-users {
+            text-align: center;
+            font-style: italic;
+            color: #6c757d;
+            padding: 20px 0;
+        }
+
+        /* Pagination container */
+        .pagination-container {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .user-container {
+                padding: 20px 15px;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+                width: 100%;
+            }
+            thead tr {
+                display: none; /* hide header on small screens */
+            }
+            tbody tr {
+                margin-bottom: 15px;
+                border: 1px solid #dee2e6;
+                border-radius: 6px;
+                padding: 10px;
+                background-color: #fff;
+            }
+            tbody td {
+                border: none;
+                padding: 8px 10px;
+                position: relative;
+                padding-left: 50%;
+            }
+            tbody td::before {
+                position: absolute;
+                top: 50%;
+                left: 15px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                transform: translateY(-50%);
+                font-weight: 600;
+                color: #495057;
+            }
+            tbody td:nth-of-type(1)::before { content: "Id"; }
+            tbody td:nth-of-type(2)::before { content: "Email"; }
+            tbody td:nth-of-type(3)::before { content: "Role"; }
+        }
+
+    </style>
+{% endblock %}
+
+{% block title %}User List{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4" >User List</h1>
+
+<div class="user-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in pagination %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3" class="text-center">No users found!</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+    <div class="d-flex justify-content-center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+
+{% endblock %}

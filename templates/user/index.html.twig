@@ -128,9 +128,15 @@
         <tbody>
         {% for user in pagination %}
             <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
+                <td><a href="{{ path('app_user_details',{userId: user.id}) }}">{{ user.id }}</a></td>
+                <td><a href="{{ path('app_user_details',{userId: user.id}) }}">{{ user.email }}</a></td>
                 <td>{{ user.role }}</td>
+                <td>
+                    <form action="{{ path('delete_user', { userId: user.id }) }}" method="get" onsubmit="return confirm('Are you sure?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
             </tr>
         {% else %}
             <tr>

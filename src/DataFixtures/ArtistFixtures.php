@@ -15,6 +15,7 @@ class ArtistFixtures extends Fixture
             $artist->setName("Artist Name{$i}");
             $artist->setMusicalGenre("Musical Genre{$i}");
             $manager->persist($artist);
+            $this->addReference('Artist Name' . $i, $artist);
         }
         $manager->flush();
     }

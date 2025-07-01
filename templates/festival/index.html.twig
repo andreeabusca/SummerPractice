@@ -130,7 +130,7 @@
             <tbody>
             {% for festival in pagination %}
                 <tr>
-                    <td>{{ festival.id }}</td>
+                    <td><a href="{{ path('app_festival_show', {festivalId: festival.id}) }}">{{ festival.id }}</a></td>
                     <td>{{ festival.name }}</td>
                     <td>{{ festival.location }}</td>
                     <td>{{ festival.startDate | date('Y-m-d')}}</td>

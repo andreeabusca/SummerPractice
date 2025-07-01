@@ -6,6 +6,33 @@
         body{
             background-color: #f8f9fa !important;
         }
+        .btn-custom {
+            background-color: #4A90E2;
+            color: #FFFFFF; !important;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-custom:hover {
+            background-color: #357ABD;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        .btn-custom:active {
+            background-color: #2C5FA8;
+            color: #FFFFFF;
+            transform: translateY(0);
+        }
+
         .user-container {
             max-width: 900px;
             margin: 40px auto;
@@ -111,37 +138,72 @@
     </style>
 {% endblock %}
 
-{% block title %}Artist List{% endblock %}
+{% block title %}Festival Details{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4" >Artist List</h1>
+    <h1 class="mb-4" >Festival Details</h1>
 
     <div class="user-container">
         <table>
             <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
-                <th>Musical Genre</th>
+                <th>Location</th>
+                <th>Start Date</th>
+                <th>End Date</th>
             </tr>
             </thead>
             <tbody>
-            {% for artist in pagination %}
+            {%  if festival is not null %}
                 <tr>
-                    <td><a href="{{ path('app_artist_show', {artistId: artist.id}) }}">{{ artist.id }}</td>
-                    <td>{{ artist.name }}</td>
-                    <td>{{ artist.musicalGenre }}</td>
+                    <td>{{ festival.name }}</td>
+                    <td>{{ festival.location }}</td>
+                    <td>{{ festival.startDate | date('Y-m-d') }}</td>
+                    <td>{{ festival.endDate | date('Y-m-d') }}</td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="3" class="text-center">No artists found!</td>
+                    <td colspan="3" class="text-center">No user details found!</td>
                 </tr>
-            {% endfor %}
+            {% endif %}
             </tbody>
 
         </table>
+        <h2 class="h5 text-muted" align="center">Concerts</h2>
+        <div class="user-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Artist</th>
+                    <th>Date</th>
+                    <th>Time Slot</th>
+                    <th>Stage</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for concert in pagination %}
+                    <tr>
+                        <td>{{ concert.artist.name }}</a></td>
+                        <td>{{ concert.date| date('Y-m-d') }}</td>
+                        <td>{{ concert.timeSlot| date('H:i') }}</td>
+                        <td>{{ concert.stage}}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">No details found!</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+            <div class="d-flex justify-content-center">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
         <div class="d-flex justify-content-center">
-            {{ knp_pagination_render(pagination) }}
+            <button class="btn-custom">Edit</button>
+            <a href="{{ path('app_festival_artist') }}" class="btn-custom"> Back to Festival Concerts</a></button>
+            <a href="{{ path('app_festival') }}" class="btn-custom"> Back to Festival List</a></button>
         </div>
     </div>
 

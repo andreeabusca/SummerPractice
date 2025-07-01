@@ -6,6 +6,33 @@
         body{
             background-color: #f8f9fa !important;
         }
+        .btn-custom {
+            background-color: #4A90E2;
+            color: #FFFFFF; !important;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-custom:hover {
+            background-color: #357ABD;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        .btn-custom:active {
+            background-color: #2C5FA8;
+            color: #FFFFFF;
+            transform: translateY(0);
+        }
+
         .user-container {
             max-width: 900px;
             margin: 40px auto;
@@ -111,37 +138,40 @@
     </style>
 {% endblock %}
 
-{% block title %}Artist List{% endblock %}
+{% block title %}User Details{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4" >Artist List</h1>
+    <h1 class="mb-4" >User Details</h1>
+    <h2 class="h5 text-muted" align="center">User ID: {{ details.userId.id }}</h2>
+    <h2 class="h5 text-muted" align="center">Email: {{ details.userId.email }}</h2>
 
     <div class="user-container">
         <table>
             <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
-                <th>Musical Genre</th>
+                <th>Age</th>
+                <th>Student</th>
             </tr>
             </thead>
             <tbody>
-            {% for artist in pagination %}
+            {%  if details is not null %}
                 <tr>
-                    <td><a href="{{ path('app_artist_show', {artistId: artist.id}) }}">{{ artist.id }}</td>
-                    <td>{{ artist.name }}</td>
-                    <td>{{ artist.musicalGenre }}</td>
+                    <td>{{ details.name }}</td>
+                    <td>{{ details.age }}</td>
+                    <td>{{ details.isStudent ? 'Yes':'No' }}</td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="3" class="text-center">No artists found!</td>
+                    <td colspan="3" class="text-center">No user details found!</td>
                 </tr>
-            {% endfor %}
+            {% endif %}
             </tbody>
 
         </table>
         <div class="d-flex justify-content-center">
-            {{ knp_pagination_render(pagination) }}
+            <button class="btn-custom">Edit</button>
+            <a href="{{ path('app_user') }}" class="btn-custom"> Back</a></button>
         </div>
     </div>
 

@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user', methods: ['GET'])]
+    #[Route('/users', name: 'app_user', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $queryBuilder = $entityManager->getRepository(User::class)->createQueryBuilder('user')->orderBy('user.id','DESC');
@@ -22,5 +22,17 @@ final class UserController extends AbstractController
             'pagination' => $pagination,
             'controller_name' => 'UserController',
         ]);
+    }
+    #[Route('/delete/{userId}', name: 'delete_user', methods: ['GET'])]
+    public function delete(EntityManagerInterface $entityManager, Request $request, int $userId): Response{
+
+        $user = $entityManager->getRepository(User::class)->find($userId);
+        foreach ($user->getPurchases() as $purchase) {
+            $entityManager->remove($purchase);
+        }
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_user');
     }
 }

@@ -3,150 +3,163 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        body{
-            background-color: #f8f9fa !important;
+        body {
+            background: linear-gradient(135deg, #5b8def, #2c3e50);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 0;
         }
-        .user-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 30px 25px;
-            background-color: #fff;
-            border: 1px solid #dee2e6;
+
+        .content-wrapper {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            color: #2c3e50;
+        }
+
+        h1 {
+            font-weight: 700;
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, #5b8def, #2c3e50);
+            color: #fff;
+            font-weight: 600;
+            padding: 10px 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            border: none;
+            transition: background 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
         }
 
-        /* Table full width, clean borders */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 1rem;
-            color: #343a40;
+        .btn-create:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #2c3e50, #5b8def);
         }
 
-        /* Table header */
-        thead th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            text-align: left;
-            padding: 12px 15px;
+        .table thead {
+            background-color: #f0f4f8;
+        }
+
+        .table th {
+            color: #2c3e50;
             font-weight: 600;
         }
 
-        /* Table cells */
-        tbody td {
-            border: 1px solid #dee2e6;
-            padding: 12px 15px;
+        .table td {
+            color: #2f3542;
         }
 
-        /* Zebra striping for rows */
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .table a {
+            color: #5b8def;
+            font-weight: 500;
+            text-decoration: none;
         }
 
-        /* Hover effect for rows */
-        tbody tr:hover {
-            background-color: #e9f5ff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        .table a:hover {
+            text-decoration: underline;
         }
 
-        /* Center "No users found" text */
-        tbody .no-users {
+        .no-data {
             text-align: center;
+            color: #95a5a6;
             font-style: italic;
-            color: #6c757d;
-            padding: 20px 0;
+            padding: 20px;
         }
 
-        /* Pagination container */
+        /* PAGINATION */
         .pagination-container {
-            margin-top: 25px;
+            margin-top: 30px;
             display: flex;
             justify-content: center;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .user-container {
-                padding: 20px 15px;
-            }
-            table, thead, tbody, th, td, tr {
-                display: block;
-                width: 100%;
-            }
-            thead tr {
-                display: none; /* hide header on small screens */
-            }
-            tbody tr {
-                margin-bottom: 15px;
-                border: 1px solid #dee2e6;
-                border-radius: 6px;
-                padding: 10px;
-                background-color: #fff;
-            }
-            tbody td {
-                border: none;
-                padding: 8px 10px;
-                position: relative;
-                padding-left: 50%;
-            }
-            tbody td::before {
-                position: absolute;
-                top: 50%;
-                left: 15px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                transform: translateY(-50%);
-                font-weight: 600;
-                color: #495057;
-            }
-            tbody td:nth-of-type(1)::before { content: "Id"; }
-            tbody td:nth-of-type(2)::before { content: "Email"; }
-            tbody td:nth-of-type(3)::before { content: "Role"; }
+        .pagination {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+            padding-left: 0;
         }
 
+        .pagination li > a,
+        .pagination li > span {
+            background: linear-gradient(135deg, #5b8def, #2c3e50);
+            color: #fff;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            transition: background 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .pagination li > a:hover {
+            background: linear-gradient(135deg, #2c3e50, #5b8def);
+            transform: translateY(-2px);
+        }
+
+        .pagination .current {
+            background: linear-gradient(135deg, #2c3e50, #5b8def);
+            font-weight: 700;
+        }
+
+        .pagination .disabled > span {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     </style>
 {% endblock %}
 
 {% block title %}Festival List{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4" >Festival List</h1>
+    <div class="container content-wrapper">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="display-5">🎶 Festival List</h1>
+            <a href="{{ path('app_festival_create') }}" class="btn btn-create">+ New Festival</a>
+        </div>
 
-    <div class="user-container">
-        <table>
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Location</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for festival in pagination %}
-                <tr>
-                    <td><a href="{{ path('app_festival_show', {festivalId: festival.id}) }}">{{ festival.id }}</a></td>
-                    <td>{{ festival.name }}</td>
-                    <td>{{ festival.location }}</td>
-                    <td>{{ festival.startDate | date('Y-m-d')}}</td>
-                    <td>{{ festival.endDate| date('Y-m-d') }}</td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="3" class="text-center">No festivals found!</td>
-                </tr>
-            {% endfor %}
-            </tbody>
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for festival in pagination %}
+                        <tr>
+                            <td><a href="{{ path('app_festival_show', {festivalId: festival.id}) }}">{{ festival.id }}</a></td>
+                            <td><a href="{{ path('app_festival_show', {festivalId: festival.id}) }}">{{ festival.name }}</a></td>
+                            <td>{{ festival.location }}</td>
+                            <td>{{ festival.startDate|date('Y-m-d') }}</td>
+                            <td>{{ festival.endDate|date('Y-m-d') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="no-data">No festivals found.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-        </table>
-        <div class="d-flex justify-content-center">
-            {{ knp_pagination_render(pagination) }}
+            <div class="pagination-container">
+                {{ knp_pagination_render(pagination) }}
+            </div>
         </div>
     </div>
-
 {% endblock %}

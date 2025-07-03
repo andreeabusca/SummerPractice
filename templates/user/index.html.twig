@@ -6,6 +6,32 @@
         body{
             background-color: #f8f9fa !important;
         }
+        .btn-custom {
+            background-color: #4A90E2;
+            color: #FFFFFF; !important;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-custom:hover {
+            background-color: #357ABD;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        .btn-custom:active {
+            background-color: #2C5FA8;
+            color: #FFFFFF;
+            transform: translateY(0);
+        }
         .user-container {
             max-width: 900px;
             margin: 40px auto;
@@ -134,7 +160,7 @@
                 <td>
                     <form action="{{ path('delete_user', { userId: user.id }) }}" method="get" onsubmit="return confirm('Are you sure?');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                        <button class="btn btn-danger btn-sm">Delete</button>
+                        <button class="btn-custom">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -146,6 +172,7 @@
         </tbody>
 
     </table>
+    <a href="{{ path('app_user_create') }}"  class="btn-custom">Create</a>
     <div class="d-flex justify-content-center">
         {{ knp_pagination_render(pagination) }}
     </div>

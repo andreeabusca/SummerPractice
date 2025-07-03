@@ -3,10 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Festival;
+use Doctrine\DBAL\Types\TextType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,7 +28,35 @@ final class FestivalController extends AbstractController
             'controller_name' => 'FestivalController',
         ]);
     }
-    #[Route('/festivals/{festivalId}', name: 'app_festival_show', methods: ['GET'])]
+
+    #[Route('/festivals/create', name: 'app_festival_create', methods: ['GET','POST'])]
+    public function create(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $festival = new Festival();
+
+        $form = $this->createFormBuilder($festival)
+            ->add('name', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('location', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('startDate', DateTimeType::class)
+            ->add('endDate', DateTimeType::class)
+            ->add('price', IntegerType::class)
+            ->add('save', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager->persist($festival);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_festival');
+        }else{
+            return $this->render('festival/create.html.twig', [
+                'form' => $form->createView(),
+            ]);
+        }
+    }
+
+    #[Route('/festivals/show/{festivalId}', name: 'app_festival_show', methods: ['GET'])]
     public function show(EntityManagerInterface $entityManager, int $festivalId, Request $request, PaginatorInterface $paginator): Response
     {
         $festival = $entityManager->find(Festival::class, $festivalId);
@@ -38,4 +70,32 @@ final class FestivalController extends AbstractController
             'pagination' => $pagination,
         ]);
     }
+
+    #[Route('/festivals/edit/{festivalId}', name: 'app_festival_edit', methods: ['GET','POST'])]
+    public function edit(EntityManagerInterface $entityManager, int $festivalId,  Request $request): Response{
+        $festival = $entityManager->find(Festival::class, $festivalId);
+        if (!$festival) {
+            throw $this->createNotFoundException('Festival not found.');
+        }
+        $form = $this->createFormBuilder($festival)
+            ->add('name', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('location', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('startDate', DateTimeType::class)
+            ->add('endDate', DateTimeType::class)
+            ->add('price', IntegerType::class)
+            ->add('save', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            return $this->redirectToRoute('app_festival_show',['festivalId' => $festivalId]);
+        }else{
+            return $this->render('festival/edit.html.twig', [
+                'form' => $form->createView(),
+            ]);
+        }
+    }
+
+
 }

@@ -156,15 +156,15 @@
             <tbody>
             {%  for concert in pagination %}
                 <tr>
-                    <td><a href="{{ path('app_festival_show', {festivalId: concert.festival.id}) }}">{{ concert.festival.id }}</a></td>
-                    <td><a href="{{ path('app_artist_show', {artistId: concert.artist.id}) }}">{{ concert.artist.id}}</a></td>
+                    <td><a href="{{ path('app_festival_show', {festivalId: concert.festival.id}) }}">{{ concert.festival.name }}</a></td>
+                    <td><a href="{{ path('app_artist_show', {artistId: concert.artist.id}) }}">{{ concert.artist.name}}</a></td>
                     <td>{{ concert.date | date('Y-m-d') }}</td>
                     <td>{{ concert.timeSlot| date('H:i') }}</td>
                     <td>{{ concert.stage }}</td>
                     <td>
                         <form action="{{ path('delete_concert', { concertId: concert.id }) }}" method="get" onsubmit="return confirm('Are you sure?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ concert.id) }}">
-                            <button class="btn btn-danger btn-sm">Delete</button>
+                            <button class="btn-custom">Delete</button>
                         </form>
                     </td>
                 </tr>
@@ -176,6 +176,7 @@
             </tbody>
 
         </table>
+        <a href="{{ path('festival_artist_create') }}"  class="btn-custom">Create</a>
         <div class="d-flex justify-content-center">
             {{ knp_pagination_render(pagination) }}
         </div>

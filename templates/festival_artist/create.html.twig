@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #f8f9fa !important;
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px 25px;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .btn-custom {
+            background-color: #4A90E2;
+            color: #FFFFFF !important;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-custom:hover {
+            background-color: #357ABD;
+            transform: translateY(-2px);
+        }
+
+        .btn-custom:active {
+            background-color: #2C5FA8;
+            transform: translateY(0);
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 30px;
+            color: #333;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Create Concert{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4" >Create Concert</h1>
+
+    <div class="form-container" align="center">
+        {{ form_start(form) }}
+        {{ form_row(form.festival) }}
+        {{ form_row(form.artist) }}
+        {{ form_row(form.date)}}
+        {{ form_row(form.time_slot) }}
+        {{ form_row(form.stage) }}
+        <div style="margin-top: 20px;">
+            {{ form_row(form.save, {'attr': {'class': 'btn-custom'}}) }}
+        </div>
+        {{ form_end(form) }}
+        <a href="{{ path('app_festival_artist') }}" align="left" class="btn-custom" > Back to Concert List</a></button>
+    </div>
+
+{% endblock %}

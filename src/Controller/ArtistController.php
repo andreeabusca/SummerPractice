@@ -7,6 +7,7 @@ use App\Entity\FestivalArtist;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,7 +25,7 @@ final class ArtistController extends AbstractController
             'controller_name' => 'ArtistController',
         ]);
     }
-    #[Route('/artists/{artistId}', name: 'app_artist_show', methods: ['GET'])]
+    #[Route('/artists/show/{artistId}', name: 'app_artist_show', methods: ['GET'])]
     public function show(EntityManagerInterface $entityManager, int $artistId, Request $request, PaginatorInterface $paginator): Response
     {
         $artist = $entityManager->find(Artist::class, $artistId);
@@ -34,5 +35,52 @@ final class ArtistController extends AbstractController
             'artist' => $artist,
             'pagination' => $pagination,
         ]);
+    }
+
+    #[Route('/artists/create', name: 'app_artist_create', methods: ['GET','POST'])]
+    public function create(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $artist = new Artist();
+
+        $form = $this->createFormBuilder($artist)
+            ->add('name', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('musical_genre', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('save', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager->persist($artist);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_artist_show', ['artistId' => $artist->getId()]);
+        }else{
+            return $this->render('artist/create.html.twig', [
+                'form' => $form->createView(),
+            ]);
+        }
+    }
+
+    #[Route('/artists/edit/{artistId}', name: 'app_artist_edit', methods: ['GET','POST'])]
+    public function edit(EntityManagerInterface $entityManager, int $artistId,  Request $request): Response{
+        $artist = $entityManager->find(Artist::class, $artistId);
+        if (!$artist) {
+            throw $this->createNotFoundException('Artist not found.');
+        }
+        $form = $this->createFormBuilder($artist)
+            ->add('name', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('musical_genre', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('save', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            return $this->redirectToRoute('app_artist_show',['artistId' => $artistId]);
+        }else{
+            return $this->render('artist/edit.html.twig', [
+                'form' => $form->createView(),
+            ]);
+        }
     }
 }

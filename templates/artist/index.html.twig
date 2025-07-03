@@ -129,7 +129,7 @@
             {% for artist in pagination %}
                 <tr>
                     <td><a href="{{ path('app_artist_show', {artistId: artist.id}) }}">{{ artist.id }}</td>
-                    <td>{{ artist.name }}</td>
+                    <td><a href="{{ path('app_artist_show', {artistId: artist.id}) }}">{{ artist.name }}</a></td>
                     <td>{{ artist.musicalGenre }}</td>
                 </tr>
             {% else %}
@@ -140,6 +140,7 @@
             </tbody>
 
         </table>
+        <a href="{{ path('app_artist_create') }}"  class="btn-custom">Create</a>
         <div class="d-flex justify-content-center">
             {{ knp_pagination_render(pagination) }}
         </div>

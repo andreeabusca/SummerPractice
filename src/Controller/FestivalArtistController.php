@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,13 +22,41 @@ final class FestivalArtistController extends AbstractController
     #[Route('/festival/artist', name: 'app_festival_artist')]
     public function index(EntityManagerInterface $entityManager,Request $request, PaginatorInterface $paginator): Response
     {
-        $queryBuilder = $entityManager->getRepository(FestivalArtist::class)->createQueryBuilder('concert')->orderBy('concert.id');
 
-        $pagination = $paginator->paginate($queryBuilder, $request->query->getInt('page', 1), 10);
+        $festivalSearch = $request->query->get('festival');
+        $artistSearch = $request->query->get('artist');
+
+        $queryBuilder = $entityManager->getRepository(FestivalArtist::class)
+            ->createQueryBuilder('concert')
+            ->join('concert.festival', 'f')
+            ->join('concert.artist', 'a')
+            ->addSelect('f', 'a');
+
+        if ($festivalSearch) {
+            $queryBuilder->andWhere('LOWER(f.name) LIKE :festivalName')
+                ->setParameter('festivalName', '%' . strtolower($festivalSearch) . '%');
+        }
+
+        if ($artistSearch) {
+            $queryBuilder->andWhere('LOWER(a.name) LIKE :artistName')
+                ->setParameter('artistName', '%' . strtolower($artistSearch) . '%');
+        }
+
+        $queryBuilder->orderBy('concert.date', 'ASC');
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            10
+        );
+
         return $this->render('festival_artist/index.html.twig', [
             'pagination' => $pagination,
-            'controller_name' => 'FestivalController',
+            'festivalSearch' => $festivalSearch,
+            'artistSearch' => $artistSearch,
         ]);
+
+
     }
     #[Route('/delete/concert/{concertId}', name: 'delete_concert', methods: ['GET'])]
     public function delete(EntityManagerInterface $entityManager, Request $request, int $concertId): Response{
@@ -71,4 +100,6 @@ final class FestivalArtistController extends AbstractController
             ]);
         }
     }
+
+
 }

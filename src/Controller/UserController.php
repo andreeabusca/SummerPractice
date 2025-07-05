@@ -11,7 +11,11 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class UserController extends AbstractController
 {
@@ -40,7 +44,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/users/create', name: 'app_user_create', methods: ['GET','POST'])]
-    public function create(EntityManagerInterface $entityManager, Request $request): Response{
+    public function create(EntityManagerInterface $entityManager, Request $request,UserPasswordHasherInterface $passwordHasher): Response{
         $user = new User();
 
         $form = $this->createFormBuilder($user)
@@ -52,6 +56,14 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $plainPassword = $form->get('password')->getData();
+
+            // Hash the password
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $plainPassword
+            );
+            $user->setPassword($hashedPassword);
             $user->setRole('normal');
             $user->setToken(bin2hex(string: random_bytes(16)));
             $entityManager->persist($user);
@@ -64,4 +76,5 @@ final class UserController extends AbstractController
         }
 
     }
+
 }

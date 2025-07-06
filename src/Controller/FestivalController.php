@@ -20,11 +20,19 @@ final class FestivalController extends AbstractController
     #[Route('/festivals', name: 'app_festival', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager,Request $request, PaginatorInterface $paginator): Response
     {
+        $festivalSearch = $request->query->get('festival');
+
         $queryBuilder = $entityManager->getRepository(Festival::class)->createQueryBuilder('festival')->orderBy('festival.id');
+
+        if ($festivalSearch) {
+            $queryBuilder->andWhere('LOWER(festival.name) LIKE :festivalName')
+                ->setParameter('festivalName', '%' . strtolower($festivalSearch) . '%');
+        }
 
         $pagination = $paginator->paginate($queryBuilder, $request->query->getInt('page', 1), 10);
         return $this->render('festival/index.html.twig', [
             'pagination' => $pagination,
+            'festivalSearch' => $festivalSearch,
             'controller_name' => 'FestivalController',
         ]);
     }

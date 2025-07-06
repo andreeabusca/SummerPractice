@@ -17,11 +17,18 @@ final class ArtistController extends AbstractController
     #[Route('/artists', name: 'app_artist', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
+        $artistSearch = $request->query->get('artist');
         $queryBuilder = $entityManager->getRepository(Artist::class)->createQueryBuilder('artist')->orderBy('artist.name');
+
+        if ($artistSearch) {
+            $queryBuilder->andWhere('LOWER(artist.name) LIKE :artistName')
+                ->setParameter('artistName', '%' . strtolower($artistSearch) . '%');
+        }
 
         $pagination = $paginator->paginate($queryBuilder, $request->query->getInt('page', 1), 10);
         return $this->render('artist/index.html.twig', [
             'pagination'  => $pagination,
+            'artistSearch' => $artistSearch,
             'controller_name' => 'ArtistController',
         ]);
     }

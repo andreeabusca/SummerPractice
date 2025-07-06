@@ -117,6 +117,21 @@
     <h1 class="mb-4" >Artist List</h1>
 
     <div class="user-container">
+        <form method="get" class="mb-4" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+            <div>
+                <label for="artist">Artist</label><br>
+                <input type="text" id="artist" name="artist" class="form-control" placeholder="Artist name"
+                       value="{{ artistSearch|default('') }}">
+            </div>
+            <div>
+                <button type="submit" class="btn-custom">Search</button>
+            </div>
+            {% if artistSearch %}
+                <div>
+                    <a href="{{ path('app_festival_artist') }}" class="btn-custom" style="background-color: #6c757d;">Reset</a>
+                </div>
+            {% endif %}
+        </form>
         <table>
             <thead>
             <tr>

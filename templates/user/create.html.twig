@@ -4,50 +4,80 @@
     {{ parent() }}
     <style>
         body {
-            background-color: #f8f9fa !important;
-        }
-
-        .form-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 30px 25px;
-            background-color: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            background-color: #1c1e26; /* Softer charcoal background */
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .btn-custom {
-            background-color: #4A90E2;
-            color: #FFFFFF !important;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-custom:hover {
-            background-color: #357ABD;
-            transform: translateY(-2px);
-        }
-
-        .btn-custom:active {
-            background-color: #2C5FA8;
-            transform: translateY(0);
+            color: #f2f2f2;
         }
 
         h1 {
             text-align: center;
             font-weight: bold;
-            margin-top: 30px;
-            color: #333;
+            margin: 40px 0 20px;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00ffd0, #3b82f6, #9f7aea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        .form-container {
+            max-width: 750px;
+            margin: auto;
+            padding: 40px;
+            background: linear-gradient(135deg, #252732, #2e303e);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2f2f2f;
+        }
+
+        label {
+            font-weight: 600;
+            color: #c9c9d1;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            background-color: #2f313e;
+            border: 1px solid #45475a;
+            color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 20px;
+            transition: border 0.3s ease;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border: 1px solid #00d1ff;
+            outline: none;
+            background-color: #3b3e51;
+        }
+
+        .btn-custom {
+            background: linear-gradient(90deg, #00ffd0, #3b82f6, #8a2be2);
+            color: #ffffff !important;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 255, 208, 0.2);
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5);
+        }
+
+        .btn-custom:active {
+            transform: scale(0.98);
+        }
+
+        .text-center {
+            text-align: center;
         }
     </style>
 {% endblock %}
@@ -55,17 +85,15 @@
 {% block title %}Create User{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4" >Create User</h1>
+    <h1>Create User</h1>
 
-    <div class="form-container" align="center">
+    <div class="form-container">
         {{ form_start(form) }}
         {{ form_row(form.email) }}
         {{ form_row(form.password) }}
-        <div style="margin-top: 20px;">
+        <div class="text-center mt-4">
             {{ form_row(form.save, {'attr': {'class': 'btn-custom'}}) }}
         </div>
         {{ form_end(form) }}
-        <a href="{{ path('app_user') }}" align="left" class="btn-custom" > Back to User List</a></button>
     </div>
-
 {% endblock %}

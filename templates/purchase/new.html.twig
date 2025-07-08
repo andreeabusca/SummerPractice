@@ -95,20 +95,17 @@
 {% block title %}Create Concert{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4" >Create Concert</h1>
-
+    <h1 class="mb-4" >Buy New Ticket</h1>
     <div class="form-container" align="center">
+        <h2 class="h5" align="center"> Name: {{ details.name }} </h2>
+        <h2 class="h5" align="center">Email: {{ user.email }}</h2>
+        <h2 class="h5" align="center">Festival: {{ festival.name }}</h2>
         {{ form_start(form) }}
-        {{ form_row(form.festival) }}
-        {{ form_row(form.artist) }}
-        {{ form_row(form.date)}}
-        {{ form_row(form.time_slot) }}
-        {{ form_row(form.stage) }}
+        {{ form_row(form.quantity) }}
         <div style="margin-top: 20px;">
             {{ form_row(form.save, {'attr': {'class': 'btn-custom'}}) }}
         </div>
         {{ form_end(form) }}
-        <a href="{{ path('app_festival_artist') }}" align="left" class="btn-custom" > Back to Concert List</a></button>
     </div>
 
 {% endblock %}

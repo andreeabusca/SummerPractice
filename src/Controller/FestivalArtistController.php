@@ -68,12 +68,11 @@ final class FestivalArtistController extends AbstractController
         return $this->redirectToRoute('app_festival_artist');
     }
 
-    #[Route('/festival/artist/concert.create',name: 'festival_artist_create', methods: ['GET','POST'])]
+    #[Route('/festival/artist/concert/create',name: 'festival_artist_create', methods: ['GET','POST'])]
     public function create(EntityManagerInterface $entityManager, Request $request): Response{
 
         $festivalArtist = new FestivalArtist();
-        $form = $this->createFormBuilder($festivalArtist)
-            ->add('festival', EntityType::class, [
+        $form = $this->createFormBuilder($festivalArtist)->add('festival', EntityType::class, [
                 'class' => Festival::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Select a Festival',

@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class UserController extends AbstractController
 {
-    #[Route('/users', name: 'app_user', methods: ['GET'])]
+    #[Route('/users/list', name: 'app_user', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $queryBuilder = $entityManager->getRepository(User::class)->createQueryBuilder('user')->orderBy('user.id','DESC');
@@ -64,7 +64,7 @@ final class UserController extends AbstractController
                 $plainPassword
             );
             $user->setPassword($hashedPassword);
-            $user->setRole('normal');
+            $user->setRole('ROLE_NORMAL');
             $user->setToken(bin2hex(string: random_bytes(16)));
             $entityManager->persist($user);
             $entityManager->flush();

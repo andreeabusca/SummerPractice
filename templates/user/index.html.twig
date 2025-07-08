@@ -3,179 +3,227 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        body{
-            background-color: #f8f9fa !important;
-        }
-        .btn-custom {
-            background-color: #4A90E2;
-            color: #FFFFFF; !important;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-custom:hover {
-            background-color: #357ABD;
-            color: #FFFFFF;
-            transform: translateY(-2px);
-        }
-
-        .btn-custom:active {
-            background-color: #2C5FA8;
-            color: #FFFFFF;
-            transform: translateY(0);
-        }
-        .user-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 30px 25px;
-            background-color: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        body {
+            background-color: #1c1e26;
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: #f2f2f2;
         }
 
-        /* Table full width, clean borders */
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: linear-gradient(90deg, #00ffd0, #3b82f6, #9f7aea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            color: #00d1ff !important;
+            font-weight: 600;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            margin: 40px 0 30px;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00ffd0, #3b82f6, #9f7aea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        .user-container {
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, #252732, #2e303e);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2f2f2f;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 1rem;
-            color: #343a40;
+            margin-top: 20px;
         }
 
-        /* Table header */
-        thead th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
+        th, td {
+            padding: 14px 20px;
             text-align: left;
-            padding: 12px 15px;
+            border-bottom: 1px solid #444;
+        }
+
+        th {
+            color: #00ffd0;
             font-weight: 600;
         }
 
-        /* Table cells */
-        tbody td {
-            border: 1px solid #dee2e6;
-            padding: 12px 15px;
+        tr:hover {
+            background-color: #2f313e;
         }
 
-        /* Zebra striping for rows */
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
+        a {
+            color: #3b82f6;
+            text-decoration: none;
         }
 
-        /* Hover effect for rows */
-        tbody tr:hover {
-            background-color: #e9f5ff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        a:hover {
+            text-decoration: underline;
         }
 
-        /* Center "No users found" text */
-        tbody .no-users {
+        .btn-custom {
+            background: linear-gradient(90deg, #00ffd0, #3b82f6, #8a2be2);
+            color: #ffffff !important;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 255, 208, 0.2);
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+        }
+
+        .btn-custom:active {
+            transform: scale(0.97);
+        }
+
+        td:last-child {
             text-align: center;
-            font-style: italic;
-            color: #6c757d;
-            padding: 20px 0;
         }
 
-        /* Pagination container */
-        .pagination-container {
-            margin-top: 25px;
+        .pagination {
             display: flex;
-            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background-color: #2c2f3a;
+            border-radius: 12px;
+            box-shadow:
+                0 4px 12px #00ffd055,
+                0 8px 16px #3b82f655,
+                0 10px 20px #8a2be255;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .user-container {
-                padding: 20px 15px;
-            }
-            table, thead, tbody, th, td, tr {
-                display: block;
-                width: 100%;
-            }
-            thead tr {
-                display: none; /* hide header on small screens */
-            }
-            tbody tr {
-                margin-bottom: 15px;
-                border: 1px solid #dee2e6;
-                border-radius: 6px;
-                padding: 10px;
-                background-color: #fff;
-            }
-            tbody td {
-                border: none;
-                padding: 8px 10px;
-                position: relative;
-                padding-left: 50%;
-            }
-            tbody td::before {
-                position: absolute;
-                top: 50%;
-                left: 15px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                transform: translateY(-50%);
-                font-weight: 600;
-                color: #495057;
-            }
-            tbody td:nth-of-type(1)::before { content: "Id"; }
-            tbody td:nth-of-type(2)::before { content: "Email"; }
-            tbody td:nth-of-type(3)::before { content: "Role"; }
+        .pagination li {
+            list-style: none;
         }
 
+        .pagination a,
+        .pagination span {
+            color: #ffffff;
+            background: linear-gradient(145deg, #1e1f29, #292a36);
+            border: 1px solid #444654;
+            padding: 8px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow:
+                0 2px 6px rgba(0, 255, 208, 0.1),
+                0 4px 12px rgba(138, 43, 226, 0.1);
+        }
+
+        .pagination a:hover {
+            background: linear-gradient(145deg, #00ffd0, #3b82f6);
+            color: #1c1e26;
+            box-shadow:
+                0 4px 10px rgba(0, 255, 208, 0.4),
+                0 6px 16px rgba(138, 43, 226, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .pagination .current {
+            background: #8a2be2;
+            color: #ffffff;
+            font-weight: 700;
+            border-color: transparent;
+            box-shadow:
+                0 4px 12px #00ffd055,
+                0 6px 16px #3b82f655;
+        }
+
+        .alert {
+            max-width: 750px;
+            margin: 20px auto;
+        }
     </style>
 {% endblock %}
 
 {% block title %}User List{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4" >User List</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">ShowTime</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="{{ path('app_home_page') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_festival') }}">Festivals</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_artist') }}">Artists</a></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_festival_artist') }}">Concerts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_user') }}">Users</a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_user_create') }}">Sign up</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Sign in</a></li>
+                    {% if app.user %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_user_details',{userId: app.user.id}) }}">Account</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<div class="user-container">
-    <table>
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Email</th>
-            <th>Role</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for user in pagination %}
-            <tr>
-                <td><a href="{{ path('app_user_details',{userId: user.id}) }}">{{ user.id }}</a></td>
-                <td><a href="{{ path('app_user_details',{userId: user.id}) }}">{{ user.email }}</a></td>
-                <td>{{ user.role }}</td>
-                <td>
-                    <form action="{{ path('delete_user', { userId: user.id }) }}" method="get" onsubmit="return confirm('Are you sure?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                        <button class="btn-custom">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3" class="text-center">No users found!</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+    <h1>User List</h1>
 
-    </table>
-    <a href="{{ path('app_user_create') }}"  class="btn-custom">Create</a>
-    <div class="d-flex justify-content-center">
-        {{ knp_pagination_render(pagination) }}
+    <div class="user-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in pagination %}
+                <tr>
+                    <td>>{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>
+                        <form action="{{ path('delete_user', { userId: user.id }) }}" method="get" onsubmit="return confirm('Are you sure?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                            <button type="submit" class="btn-custom">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">No users found!</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination d-flex justify-content-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
     </div>
-</div>
-
 {% endblock %}

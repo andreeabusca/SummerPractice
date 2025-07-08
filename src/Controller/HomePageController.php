@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Festival;
+use App\Entity\FestivalArtist;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
@@ -16,11 +17,36 @@ final class HomePageController extends AbstractController
     #[Route('/', name: 'app_home_page')]
     public function index(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-        $queryBuilder = $entityManager->getRepository(Festival::class)->createQueryBuilder('festival')->orderBy('festival.start_date');
-        $pagination = $paginator->paginate($queryBuilder, $request->query->getInt('page', 1), 12);
+        $festivalSearch = $request->query->get('festival');
+        $artistSearch = $request->query->get('artist');
+
+        $queryBuilder = $entityManager->getRepository(FestivalArtist::class)
+            ->createQueryBuilder('fa')
+            ->join('fa.festival', 'f')
+            ->join('fa.artist', 'a')
+            ->addSelect('f', 'a')
+            ->orderBy('fa.date', 'ASC');
+
+        if ($festivalSearch) {
+            $queryBuilder->andWhere('LOWER(f.name) LIKE :festivalName')
+                ->setParameter('festivalName', '%' . strtolower($festivalSearch) . '%');
+        }
+
+        if ($artistSearch) {
+            $queryBuilder->andWhere('LOWER(a.name) LIKE :artistName')
+                ->setParameter('artistName', '%' . strtolower($artistSearch) . '%');
+        }
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            12
+        );
+
         return $this->render('home_page/index.html.twig', [
             'pagination' => $pagination,
-            'controller_name' => 'HomePageController',
+            'festivalSearch' => $festivalSearch,
+            'artistSearch' => $artistSearch,
         ]);
     }
 }

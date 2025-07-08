@@ -11,9 +11,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ path('app_home_page') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_festival') }}">Festivals</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_artist') }}">Artists</a></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_festival_artist') }}">Concerts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_user') }}">Users</a></li>
+                    {% endif %}
                     <li class="nav-item"><a class="nav-link" href="{{ path('app_user_create') }}">Sign up</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Sign in</a></li>
+                    {% if app.user %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_user_details',{userId: app.user.id}) }}">Account</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -42,17 +51,52 @@
         </div>
     </div>
 
+    <form method="get" action="{{ path('app_home_page') }}" class="container mt-4">
+        <div class="row g-3 align-items-end justify-content-center custom-search-form">
+            <div class="col-md-5">
+                <input
+                    type="text"
+                    name="festival"
+                    value="{{ festivalSearch }}"
+                    placeholder="Search by Festival"
+                    class="form-control custom-search-input"
+                />
+            </div>
+            <div class="col-md-5">
+                <input
+                    type="text"
+                    name="artist"
+                    value="{{ artistSearch }}"
+                    placeholder="Search by Artist"
+                    class="form-control custom-search-input"
+                />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn custom-search-btn w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+
+
     <div class="container mt-5">
         <div class="row g-4 justify-content-center">
             {% for festival in pagination %}
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="festival-card p-4">
-                        <h5 class="text-light mb-1">{{ festival.name }}</h5>
-                        <h6 class="text-muted mb-2">{{ festival.location }}</h6>
+                        {% set fest = festival.festival %}
+                        <h5 class="text-light mb-1">{{ fest.name }}</h5>
+                        <h6 class="text-muted mb-2">{{ fest.location }}</h6>
                         <p class="text-secondary small">
-                            {{ festival.startDate|date('Y-m-d') }} - {{ festival.endDate|date('Y-m-d') }}
+                            {{ fest.startDate|date('Y-m-d') }} - {{ fest.endDate|date('Y-m-d') }}
                         </p>
-                        <a href="#" class="btn btn-outline-info btn-sm mt-2">Details</a>
+                        <a href="{{ path('app_festival_show', {festivalId: fest.id}) }}" class="btn btn-outline-info btn-sm mt-2">Details</a>
+                        {% if app.user %}
+                            <a href="{{ path('app_purchase_new', {festivalId: fest.id, userId: app.user.id}) }}" class="btn btn-outline-info btn-sm mt-2">Buy Ticket</a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="btn btn-outline-info btn-sm mt-2">Buy Ticket</a>
+                        {% endif %}
+
                     </div>
                 </div>
             {% endfor %}
@@ -196,5 +240,50 @@
                 0 4px 12px #00ffd055,
                 0 6px 16px #3b82f655;
         }
+        .custom-search-form {
+            background: linear-gradient(135deg, #252732, #2e303e);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .custom-search-input {
+            background-color: #1e1f29;
+            border: 1px solid #444654;
+            color: #f2f2f2;
+            border-radius: 8px;
+            padding: 10px 14px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .custom-search-input::placeholder {
+            color: #aaa;
+        }
+
+        .custom-search-input:focus {
+            border-color: #00ffd0;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 255, 208, 0.4);
+        }
+
+        .custom-search-btn {
+            background: linear-gradient(145deg, #00ffd0, #3b82f6);
+            color: #1c1e26;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0, 255, 208, 0.4),
+            0 6px 16px rgba(138, 43, 226, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .custom-search-btn:hover {
+            background: linear-gradient(145deg, #3b82f6, #9f7aea);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
     </style>
 {% endblock %}

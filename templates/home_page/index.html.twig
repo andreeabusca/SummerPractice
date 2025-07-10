@@ -18,9 +18,12 @@
                     <li class="nav-item"><a class="nav-link" href="{{ path('app_festival_artist') }}">Concerts</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ path('app_user') }}">Users</a></li>
                     {% endif %}
+                    {% if not app.user %}
                     <li class="nav-item"><a class="nav-link" href="{{ path('app_user_create') }}">Sign up</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Sign in</a></li>
+                    {% endif %}
                     {% if app.user %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Log out</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ path('app_user_details',{userId: app.user.id}) }}">Account</a></li>
                     {% endif %}
                 </ul>
@@ -84,7 +87,7 @@
             {% for festival in pagination %}
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="festival-card p-4">
-                        {% set fest = festival.festival %}
+                        {% set fest = festival %}
                         <h5 class="text-light mb-1">{{ fest.name }}</h5>
                         <h6 class="text-muted mb-2">{{ fest.location }}</h6>
                         <p class="text-secondary small">

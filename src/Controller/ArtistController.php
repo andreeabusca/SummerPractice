@@ -58,6 +58,9 @@ final class ArtistController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $artist->setMusicalGenre(strtolower($artist->getMusicalGenre()));
+            $name = $artist->getName();
+            $artist->setName(ucfirst($name));
             $entityManager->persist($artist);
             $entityManager->flush();
             return $this->redirectToRoute('app_artist_show', ['artistId' => $artist->getId()]);
@@ -82,6 +85,9 @@ final class ArtistController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $artist->setMusicalGenre(strtolower($artist->getMusicalGenre()));
+            $name = $artist->getName();
+            $artist->setName(ucfirst($name));
             $entityManager->flush();
             return $this->redirectToRoute('app_artist_show',['artistId' => $artistId]);
         }else{

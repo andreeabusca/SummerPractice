@@ -258,9 +258,12 @@
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_festival_artist') }}">Concerts</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_user') }}">Users</a></li>
                     {% endif %}
-                    <li class="nav-item"><a class="nav-link" href="{{ path('app_user_create') }}">Sign up</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Sign in</a></li>
+                    {% if not app.user %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_user_create') }}">Sign up</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Sign in</a></li>
+                    {% endif %}
                     {% if app.user %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Log out</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_user_details',{userId: app.user.id}) }}">Account</a></li>
                     {% endif %}
                 </ul>
@@ -268,7 +271,6 @@
         </div>
     </nav>
     <h1 class="mb-4" >User Details</h1>
-    <h2 class="h5" align="center">User ID: {{ details.userId.id }}</h2>
     <h2 class="h5" align="center">Email: {{ details.userId.email }}</h2>
 
     <div class="user-container">
@@ -295,12 +297,21 @@
             </tbody>
 
         </table>
+        <div class="d-flex justify-content-center">
+            {% if is_granted('ROLE_NORMAL') %}
+                <form action="{{ path('delete_user', { userId: app.user.id }) }}" method="get" onsubmit="return confirm('Are you sure?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ app.user.id) }}">
+                    <button class="btn-custom">Delete Account</button>
+                </form>
+            {% endif %}
+        </div>
         <div class="user-container">
             <table>
                 <thead>
                 <tr>
                     <th>Purchase</th>
                     <th>Festival</th>
+                    <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -308,6 +319,13 @@
                     <tr>
                         <td>{{ purchases.id }}</a></td>
                         <td>{{ purchases.festival.name }}</td>
+                        <td>
+                            {% if purchases.festival.enddate < "now"|date %}
+                                <span >Expired</span>
+                            {% else %}
+                                <span >Active</span>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% else %}
                     <tr>
@@ -320,15 +338,6 @@
             <div class="d-flex justify-content-center">
                 {{ knp_pagination_render(pagination) }}
             </div>
-        </div>
-        <div class="d-flex justify-content-center">
-            {% if is_granted('ROLE_NORMAL') %}
-            <button class="btn-custom">Edit</button>
-                <form action="{{ path('delete_user', { userId: app.user.id }) }}" method="get" onsubmit="return confirm('Are you sure?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ app.user.id) }}">
-                    <button class="btn-custom">Delete</button>
-                </form>
-            {% endif %}
         </div>
     </div>
 

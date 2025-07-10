@@ -179,9 +179,12 @@
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_festival_artist') }}">Concerts</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_user') }}">Users</a></li>
                     {% endif %}
-                    <li class="nav-item"><a class="nav-link" href="{{ path('app_user_create') }}">Sign up</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Sign in</a></li>
+                    {% if not app.user %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_user_create') }}">Sign up</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Sign in</a></li>
+                    {% endif %}
                     {% if app.user %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Log out</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_user_details',{userId: app.user.id}) }}">Account</a></li>
                     {% endif %}
                 </ul>
@@ -204,7 +207,7 @@
             <tbody>
             {% for user in pagination %}
                 <tr>
-                    <td>>{{ user.id }}</td>
+                    <td>{{ user.id }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
                     <td>

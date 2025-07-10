@@ -20,12 +20,12 @@ final class HomePageController extends AbstractController
         $festivalSearch = $request->query->get('festival');
         $artistSearch = $request->query->get('artist');
 
-        $queryBuilder = $entityManager->getRepository(FestivalArtist::class)
-            ->createQueryBuilder('fa')
-            ->join('fa.festival', 'f')
-            ->join('fa.artist', 'a')
-            ->addSelect('f', 'a')
-            ->orderBy('fa.date', 'ASC');
+        $queryBuilder = $entityManager->getRepository(Festival::class)
+            ->createQueryBuilder('f')
+            ->leftJoin('f.concerts', 'fa')  // <-- Use 'concerts' here
+            ->leftJoin('fa.artist', 'a')
+            ->addSelect('fa', 'a')
+            ->orderBy('f.start_date', 'ASC');
 
         if ($festivalSearch) {
             $queryBuilder->andWhere('LOWER(f.name) LIKE :festivalName')

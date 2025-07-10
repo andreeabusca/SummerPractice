@@ -11,6 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -48,12 +51,25 @@ final class FestivalController extends AbstractController
             ->add('startDate', DateTimeType::class)
             ->add('endDate', DateTimeType::class)
             ->add('price', IntegerType::class)
-            ->add('save', SubmitType::class)
-            ->getForm();
+            ->add('save', SubmitType::class);
 
+
+        $form->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $startDate = $data->getStartDate();
+            $endDate = $data->getEndDate();
+
+            if ($startDate && $endDate && $endDate < $startDate) {
+                $form->get('endDate')->addError(new FormError('End date must be after start date.'));
+            }
+        });
+        $form = $form->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $location = $festival->getLocation();
+            $festival->setLocation(ucfirst($location));
             $entityManager->persist($festival);
             $entityManager->flush();
             return $this->redirectToRoute('app_festival');
@@ -91,11 +107,25 @@ final class FestivalController extends AbstractController
             ->add('startDate', DateTimeType::class)
             ->add('endDate', DateTimeType::class)
             ->add('price', IntegerType::class)
-            ->add('save', SubmitType::class)
-            ->getForm();
+            ->add('save', SubmitType::class);
+
+        $form->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $startDate = $data->getStartDate();
+            $endDate = $data->getEndDate();
+
+            if ($startDate && $endDate && $endDate < $startDate) {
+                $form->get('endDate')->addError(new FormError('End date must be after start date.'));
+            }
+        });
+        $form = $form->getForm();
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $location = $festival->getLocation();
+            $festival->setLocation(ucfirst($location));
             $entityManager->flush();
             return $this->redirectToRoute('app_festival_show',['festivalId' => $festivalId]);
         }else{

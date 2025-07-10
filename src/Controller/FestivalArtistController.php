@@ -90,6 +90,8 @@ final class FestivalArtistController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $stage = $festivalArtist->getStage();
+            $festivalArtist->setStage(ucfirst($stage));
             $entityManager->persist($festivalArtist);
             $entityManager->flush();
             return $this->redirectToRoute('app_festival_artist');

@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Validator\Constraints\Length;
 
 final class UserController extends AbstractController
 {
@@ -49,7 +50,14 @@ final class UserController extends AbstractController
 
         $form = $this->createFormBuilder($user)
             ->add('email', \Symfony\Component\Form\Extension\Core\Type\EmailType::class)
-            ->add('password',PasswordType::class)
+            ->add('password',PasswordType::class, [
+                'constraints' => [
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Your password must be at least 6 characters long',
+                    ]),
+                ],
+            ])
             ->add('save', SubmitType::class)
             ->getForm();
 

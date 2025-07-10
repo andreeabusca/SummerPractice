@@ -39,7 +39,13 @@ public function create(EntityManagerInterface $entityManager, Request $request, 
         $details->setUserId($user);
         $form = $this->createFormBuilder($details)
             ->add('name', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
-            ->add('age',IntegerType::class)
+            ->add('age',IntegerType::class,[
+                'label' => 'Age',
+                'data' => 18, // default value
+                'attr' => [
+                    'min' => 18, // HTML5 client-side min attribute
+                ],
+            ])
             ->add('is_student', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Are you a student?', // optional, for better UX
